@@ -151,6 +151,7 @@ def get_album_info_from_db(album_id):
 
     return album_dict
 
+
 def get_album_tracks_from_db(album_id):
     query = '''
     SELECT track_number, name, explicit, duration
@@ -165,3 +166,21 @@ def get_album_tracks_from_db(album_id):
     keys = ['track_number', 'track_name', 'explicit', 'track_duration']
 
     return create_dict_list(result, keys)
+
+
+def get_user_info():
+    query = '''
+    SELECT name, email
+    FROM user
+    WHERE id = %s;
+    '''
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, [session['user_id']])
+    result = cursor.fetchall()
+    cursor.close()
+
+    user_info_dict = {'name': result[0][0], 'email': result[0][1]}
+
+    pprint(user_info_dict)
+
+    return user_info_dict

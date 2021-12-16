@@ -1,10 +1,10 @@
 from datetime import datetime, date
 from flask import redirect, url_for, render_template, flash, request, session
 from flask_app import app, mysql, bcrypt, spotify
-from flask_app.forms import RegisterForm, LoginForm, AlbumSearchForm
+from flask_app.forms import RegisterForm, LoginForm, AlbumSearchForm, UpdateNameForm, UpdateEmailForm, UpdatePasswordForm
 from pprint import pprint
 from flask_app.spotipy_wrapper import get_album_info
-from flask_app.mysql_wrapper import get_collection, insert_into_artist, insert_into_album, insert_into_user_album, get_album_info_from_db, get_album_tracks_from_db
+from flask_app.mysql_wrapper import get_collection, insert_into_artist, insert_into_album, insert_into_user_album, get_album_info_from_db, get_album_tracks_from_db, get_user_info
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -260,6 +260,25 @@ def album_info(spotify_album_id):
     return render_template('album_info.html', album_info=album_info, album_tracks=album_tracks)
 '''
 
+
+@app.route('/profile/', methods=['GET', 'POST'])
+def profile():
+    if 'user_id' not in session:
+        flash('Must login to view profile', 'warning')
+        return redirect(url_for('login'))
+    else:
+        update_name_form = UpdateNameForm()
+        update_email_form = UpdateEmailForm()
+        update_password_form = UpdatePasswordForm()
+        
+        user_info = get_user_info()
+
+        return render_template('profile.html', 
+                               title='Profile', 
+                               update_name_form=update_name_form, 
+                               update_email_form=update_email_form, 
+                               update_password_form=update_password_form,
+                               user_info=user_info)
 
 
 @app.route("/logout/")
