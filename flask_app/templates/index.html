@@ -33,7 +33,17 @@
                 <img src="{{ item['img_src'] }}">
                 <p>{{item['name']}}</p>
                 <p>{{item['artist']}}</p>
-                <a href="/add-to-collection/{{ item['id'] }}"><button class="btn btn-primary">add to collection</button></a>
+                <a href="/add-to-collection/{{ item['id'] }}"><button class="btn btn-primary">Add To Collection</button></a>
+                <!--<a href="/album_info/{{ item['id'] }}"><button class="btn btn-primary">View More info</button></a>-->
+            </div>
+        {% endfor %}
+    {% elif collection %}
+        {% for album in collection %}
+            <div>
+                <img src="{{ album['album_img_src'] }}">
+                <p>{{album['album_name']}}</p>
+                <p>{{album['artist_name']}}</p>
+                <a href="/album_info/{{ album['album_id'] }}"><button class="btn btn-primary">View More info</button></a>
             </div>
         {% endfor %}
     {% endif %}

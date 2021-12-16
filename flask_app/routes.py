@@ -1,16 +1,21 @@
+from datetime import datetime, date
 from flask import redirect, url_for, render_template, flash, request, session
 from flask_app import app, mysql, bcrypt, spotify
 from flask_app.forms import RegisterForm, LoginForm, AlbumSearchForm
 from pprint import pprint
 from flask_app.spotipy_wrapper import get_album_info
-from flask_app.mysql_wrapper import insert_into_artist, insert_into_album, insert_into_user_album
+from flask_app.mysql_wrapper import get_collection, insert_into_artist, insert_into_album, insert_into_user_album, get_album_info_from_db, get_album_tracks_from_db
 
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/home/', methods=['GET', 'POST'])
 def home():
-    album_search_form = AlbumSearchForm()
     search_results_list = []
+    album_collection = []
+    if 'user_id' in session:
+        album_collection = get_collection()
+
+    album_search_form = AlbumSearchForm()
     if album_search_form.validate_on_submit():
         album_name = album_search_form.album_name.data.strip().lower()
         search_results = spotify.search(q='album:' + f'{album_name}', type='album')
@@ -25,7 +30,12 @@ def home():
             search_results_list.append(item_dict)
         print(search_results_list)
 
-    return render_template('index.html', title='Album Search', form=album_search_form, results=search_results_list, session=session)
+    return render_template('index.html', 
+                           title='Album Search', 
+                           form=album_search_form, 
+                           results=search_results_list,
+                           collection=album_collection, 
+                           session=session)
 
 
 @app.route('/register/', methods=['GET', 'POST'])
@@ -86,6 +96,7 @@ def login():
                 password_match = bcrypt.check_password_hash(hashed_password, login_form.password.data)
                 if password_match:
                     session['user_id'] = result[0][0]
+                    session['name'] = result[0][1]
                     print('session user_id:', session['user_id'])
                     flash('You may now start adding albums to your collection.', 'success')
                     return redirect(url_for('home'))
@@ -162,8 +173,98 @@ def search(spotify_album_id):
         return redirect(url_for('home'))
 
 
+def get_hours_minutes_seconds(duration):
+    duration_str = str(duration)
+    duration_datetime = datetime.strptime(duration_str, '%H:%M:%S')
+    duration_formatted = duration_datetime.strftime('%H:%M:%S')
+
+    hours = int(duration_formatted[:2])
+    minutes = int(duration_formatted[3:5])
+    seconds = int(duration_formatted[6:])
+
+    return hours, minutes, seconds
+
+
+def format_album_duration(duration):
+    hours, minutes, seconds = get_hours_minutes_seconds(duration)
+
+    if hours >= 1:
+        return f'{hours} hr {minutes} min'
+    else:
+        return f'{minutes} min {seconds} sec'
+
+
+def format_track_duration(duration):
+    hours, minutes, seconds = get_hours_minutes_seconds(duration)
+    
+    if hours >= 1:
+        return f'{hours}:{minutes:02d}:{seconds:02d}'
+    else:
+        return f'{minutes}:{seconds:02d}'
+
+
+def format_release_date(release_date):
+    months = {
+        1: 'January',
+        2: 'February ',
+        3: 'March',
+        4: 'April',
+        5: 'May',
+        6: 'June',
+        7: 'July',
+        8: 'August',
+        9: 'September',
+        10: 'October',
+        11: 'November',
+        12: 'December'
+    }
+
+    year = release_date.year
+    month = release_date.month
+    day = release_date.day
+
+    return f'{months[month]} {day}, {year}'
+
+
+@app.route('/album_info/<int:album_id>', methods=['GET', 'POST'])
+def album_info(album_id):
+    album_info = get_album_info_from_db(album_id)
+    album_tracks = get_album_tracks_from_db(album_id)
+
+    album_info['album_duration'] = format_album_duration(album_info['album_duration'])
+    album_info['release_date'] = format_release_date(album_info['release_date'])
+
+    for track in album_tracks:
+        track['track_duration'] = format_track_duration(track['track_duration'])
+
+    in_collection = True
+
+    return render_template('album_info.html', album_info=album_info, album_tracks=album_tracks, in_collection=in_collection)
+
+'''
+@app.route('/album_info/<string:spotify_album_id>', methods=['GET', 'POST'])
+def album_info(spotify_album_id):
+    album_info = get_album_info(spotify_album_id)
+    album_tracks = None
+
+    album_info['album_duration'] = format_album_duration(album_info['album_duration'])
+    album_info['release_date'] = format_release_date(album_info['release_date'])
+
+    for track in album_tracks:
+        track['track_duration'] = format_track_duration(track['track_duration'])
+
+    if 'user_id' in session:
+        # checks if album is in collection
+        pass
+
+    return render_template('album_info.html', album_info=album_info, album_tracks=album_tracks)
+'''
+
+
+
 @app.route("/logout/")
 def logout():
     session.pop('user_id', None)
+    session.pop('name', None)
     flash('You have successfully logged out!', 'success')
     return redirect(url_for("home"))

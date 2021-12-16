@@ -12,6 +12,7 @@
         <!-- Navbar will go here -->
         {% if 'user_id' in session %}
             <!-- Navbar will have links to tutorial (if we make one), view album collection, logout -->
+            <!-- Maybe will also say 'Hello {session['name']} or something?'-->
         {% else %}
             <!-- Navbar will have links to Login or Register -->
         {% endif %}
