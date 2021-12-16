@@ -134,7 +134,7 @@ def get_collection():
 
 def get_album_info_from_db(album_id):
     query= '''
-    SELECT AR.name, AL.name, AL.total_tracks, AL.duration, AL.release_date, AL.label, AL.img_src, AL.spotify_album_uri, AR.spotify_artist_uri
+    SELECT AR.name, AL.name, AL.total_tracks, AL.duration, AL.release_date, AL.label, AL.img_src, AL.spotify_album_id, AR.spotify_artist_id
     FROM album_artist AA
     INNER JOIN album AL ON AL.id = AA.album_id
     INNER JOIN artist AR ON AR.id = AA.artist_id
@@ -146,7 +146,7 @@ def get_album_info_from_db(album_id):
     cursor.close()
 
 
-    keys = ['artist_name', 'album_name', 'total_tracks', 'album_duration', 'release_date', 'label', 'img_src', 'spotify_album_uri', 'spotify_artist_uri']
+    keys = ['artist_name', 'album_name', 'total_tracks', 'album_duration', 'release_date', 'label', 'img_src', 'spotify_album_id', 'spotify_artist_id']
     album_dict = dict(zip(keys, result[0]))
 
     return album_dict

@@ -8,8 +8,8 @@
             {% else %}
                 <a href="#"><button class="btn btn-primary">Add To Collection</button></a>
             {% endif %}
-            <a href="{{ album_info['spotify_album_uri'] }}"><p>{{album_info['album_name']}}</p></a>
-            <a href="{{ album_info['spotify_artist_uri'] }}"><p>{{album_info['artist_name']}}</p></a>
+            <a href="https://open.spotify.com/album/{{ album_info['spotify_album_id'] }}" target="_blank"><p>{{album_info['album_name']}}</p></a>
+            <a href="https://open.spotify.com/artist/{{ album_info['spotify_artist_id'] }}" target="_blank"><p>{{album_info['artist_name']}}</p></a>
             <p>{{album_info['album_duration']}}</p>
             <p>{{album_info['release_date']}}</p>
             <p>{{album_info['total_tracks']}} songs</p>
