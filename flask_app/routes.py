@@ -3,7 +3,7 @@ from flask_app import app, mysql, bcrypt, spotify
 from flask_app.forms import RegisterForm, LoginForm, AlbumSearchForm
 from pprint import pprint
 from flask_app.spotipy_wrapper import get_album_info
-from flask_app.mysql_wrapper import insert_into_artist, insert_into_album, last_insert_id, insert_into_album_artist, insert_into_album_tracks, insert_into_user_album
+from flask_app.mysql_wrapper import insert_into_artist, insert_into_album, insert_into_user_album
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -25,7 +25,7 @@ def home():
             search_results_list.append(item_dict)
         print(search_results_list)
 
-    return render_template('index.html', title='Album Search', form=album_search_form, results=search_results_list)
+    return render_template('index.html', title='Album Search', form=album_search_form, results=search_results_list, session=session)
 
 
 @app.route('/register/', methods=['GET', 'POST'])
@@ -122,21 +122,8 @@ def search(spotify_album_id):
             # artist and album not found
             # need to insert into all tables
 
-            #inserts into artist table
-            insert_into_artist(album['album_artist'])
-
-            # gets the id of the last inserted row from artist table
-            artist_db_id = last_insert_id()
-
-            # inserts into the album table and the album_tracks 
-            insert_into_album(album)
-
-            # gets the id of the last inserted row from album table
-            album_db_id = last_insert_id()
-
-            insert_into_album_tracks(album_db_id, album['tracks'])
-            insert_into_album_artist(artist_db_id, album_db_id)
-            insert_into_user_album(session['user_id', album_db_id])
+            # inserts into artist all tables
+            insert_into_artist(album)
         else:
             artist_db_id = artist_found[0][0]
             # Checks if album is in db already 
@@ -149,7 +136,11 @@ def search(spotify_album_id):
 
             # if the album is found, this indicates that a user has the album in their collection
             # if not, then no user has it in their collection
-            if album_found:
+            if not album_found:
+                # artist exists in db but album does not
+                # need to add album, album_tracks, and album_artist to db
+                insert_into_album(album, artist_db_id)
+            else:
                 album_id = album_found[0][0]
                 # checks if the user already has album in collection
                 query = '''
@@ -165,21 +156,14 @@ def search(spotify_album_id):
                     # only need need to add to user_album
 
                     #insert into user_album
-                    insert_into_user_album(session['user_id'], album_id)
-            else:
-                # artist exists in db but album does not
-                # need to add album, album_tracks, and album_artist to db
-                insert_into_album(album)
-                album_db_id = last_insert_id()
-
-                insert_into_album_tracks(album_db_id, album['tracks'])
-                insert_into_album_artist(artist_db_id, album_db_id)
-                insert_into_user_album(session['user_id', album_db_id])
+                    insert_into_user_album(album_id)
+                
 
         return redirect(url_for('home'))
 
 
-@app.route("/logout")
+@app.route("/logout/")
 def logout():
     session.pop('user_id', None)
+    flash('You have successfully logged out!', 'success')
     return redirect(url_for("home"))

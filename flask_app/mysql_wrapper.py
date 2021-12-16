@@ -1,5 +1,6 @@
 from flask_app import mysql
 from flask import session
+from pprint import pprint
 
 
 def last_insert_id():
@@ -23,6 +24,7 @@ def insert_into_user_album(album_id):
     cursor.execute(query, data)
     mysql.connection.commit()
     cursor.close()
+    print('inserted into user_album')
 
 
 def insert_into_album_artist(artist_id, album_id):
@@ -35,13 +37,15 @@ def insert_into_album_artist(artist_id, album_id):
     cursor.execute(query, data)
     mysql.connection.commit()
     cursor.close()
-
+    print('inserted int0 album_artist')
 
 def insert_into_album_tracks(album_id, tracks):
+    pprint(tracks)
     cursor = mysql.connection.cursor()
     for track in tracks:
+        pprint(track)
         query = '''
-        INSERT INTO album_tracks (track_numer, name, explicit, duration, spotify_track_id, spotify_track_uri, album_id)
+        INSERT INTO album_tracks (track_number, name, explicit, duration, spotify_track_id, spotify_track_uri, album_id)
         VALUES (%s, %s, %s, %s, %s, %s, %s);
         '''
         data = [track['track_number'],
@@ -55,6 +59,7 @@ def insert_into_album_tracks(album_id, tracks):
     
     mysql.connection.commit()
     cursor.close()
+    print('inserted into album_tracks table')
 
 
 def insert_into_album(album, artist_id):
@@ -76,7 +81,7 @@ def insert_into_album(album, artist_id):
     mysql.connection.commit()
     album_id = last_insert_id()
     cursor.close()
-
+    print('inserted into album table')
     insert_into_album_tracks(album_id, album['tracks'])
     insert_into_album_artist(artist_id, album_id)
     insert_into_user_album(album_id)
@@ -88,13 +93,13 @@ def insert_into_artist(album):
     INSERT INTO artist (name, spotify_artist_id, spotify_artist_uri)
     VALUES (%s, %s, %s);
     '''
-    data = [album['artist']['name'], 
-            album['artist']['spotify_artist_id'], 
-            album['artist']['spotify_artist_uri']]
+    data = [album['album_artist']['name'], 
+            album['album_artist']['spotify_artist_id'], 
+            album['album_artist']['spotify_artist_uri']]
             
     cursor.execute(query, data)
     mysql.connection.commit()
     artist_id = last_insert_id()
     cursor.close()
-
+    print('inserted into artist table')
     insert_into_album(album, artist_id)
