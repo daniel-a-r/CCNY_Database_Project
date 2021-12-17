@@ -28,7 +28,6 @@ def home():
                 'name': item['name']
             }
             search_results_list.append(item_dict)
-        print(search_results_list)
 
     return render_template('index.html', 
                            title='Album Search', 
@@ -83,7 +82,6 @@ def login():
             if password_match:
                 session['user_id'] = result[0][0]
                 session['name'] = result[0][1]
-                print('session user_id:', session['user_id'])
                 flash('You may now start adding albums to your collection.', 'success')
                 return redirect(url_for('home'))
             else:
@@ -101,17 +99,10 @@ def add_to_collection(spotify_album_id):
         return redirect(url_for('login'))
           
     album = get_album_info(spotify_album_id)
-    pprint(album)
-    cursor = mysql.connection.cursor()
 
     # checks if the artist is in the db already
-    query = '''
-    SELECT * FROM artist
-    WHERE spotify_artist_id = %s
-    '''
-    cursor = mysql.connection.cursor()
-    cursor.execute(query, [album['album_artist']['spotify_artist_id']])
-    artist_found = cursor.fetchall()
+    spotify_artist_id = album['album_artist']['spotify_artist_id']
+    artist_found = get_artist_by_spotify_id(spotify_artist_id)
 
     # if artist not in db, this means album not in db therefore user hasn't saved the album
     # if the artist is found, this indicates there is at least one album from that artist in the db already
@@ -124,12 +115,7 @@ def add_to_collection(spotify_album_id):
     else:
         artist_db_id = artist_found[0][0]
         # Checks if album is already in db 
-        query = '''
-        SELECT * FROM album
-        WHERE spotify_album_id = %s
-        '''        
-        cursor.execute(query, [spotify_album_id])
-        album_found = cursor.fetchall()
+        album_found = get_album_by_spotify_id(spotify_album_id)
 
         # if the album is found, this indicates that a user has the album in their collection
         # if not, then no user has it in their collection
@@ -140,12 +126,7 @@ def add_to_collection(spotify_album_id):
         else:
             album_id = album_found[0][0]
             # checks if the user already has album in collection
-            query = '''
-            SELECT * FROM user_album
-            WHERE user_id = %s AND album_id = %s
-            '''
-            cursor.execute(query, [session['user_id'], album_id])
-            user_album_found = cursor.fetchall()
+            user_album_found = get_user_album(album_id)
             if user_album_found:
                 flash('Album already added to collection')
             else:
@@ -155,7 +136,6 @@ def add_to_collection(spotify_album_id):
                 #insert into user_album
                 insert_into_user_album(album_id)
             
-
     return redirect(url_for('home'))
 
 
@@ -177,19 +157,42 @@ def album_info_from_collection(album_id):
 
 @app.route('/album_info/<string:spotify_album_id>', methods=['GET', 'POST'])
 def album_info_from_search(spotify_album_id):
+    album_info = get_album_info(spotify_album_id)
+    
+    album_info['artist_name'] = album_info['album_artist']['name']
+    album_info['spotify_artist_id'] = album_info['album_artist']['spotify_artist_id']
+    album_info['album_name'] = album_info.pop('name', None)
+    album_info['album_duration'] = format_album_duration(album_info['album_duration'])
+    album_info['release_date'] = format_release_date(album_info['release_date'])
+    album_info.pop('spotify_album_uri', None)
+    album_info.pop('album_artist', None)
+
     if 'user_id' not in session:
         in_collection = False
     else:
-        album_info = get_album_info(spotify_album_id)
-        album_tracks = None
+        album_found = get_album_by_spotify_id(spotify_album_id)
+        if album_found:
+            album_info['db_album_id'] = album_found[0][0]
 
-        album_info['album_duration'] = format_album_duration(album_info['album_duration'])
-        album_info['release_date'] = format_release_date(album_info['release_date'])
+            user_album_found = get_user_album(album_info['db_album_id'])
+            if user_album_found:
+                in_collection = True
+        else:
+            in_collection = False
 
-        for track in album_tracks:
-            track['track_duration'] = format_track_duration(track['track_duration'])
+    album_tracks = album_info['tracks']
+    for track in album_tracks:
+        track['track_duration'] = format_track_duration(track['track_duration'])
+        track['track_name'] = track.pop('name', None)
+        track.pop('spotify_track_id', None)
+        track.pop('spotify_track_uri', None)
 
-    return render_template('album_info.html', album_info=album_info, album_tracks=album_tracks, in_collection=True)
+    album_info.pop('tracks', None)
+
+    return render_template('album_info.html', 
+                           album_info=album_info, 
+                           album_tracks=album_tracks, 
+                           in_collection=in_collection)
 
 
 @app.route('/remove-from-collection/<int:album_id>', methods=['GET', 'POST'])

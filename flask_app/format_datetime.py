@@ -1,19 +1,13 @@
 from datetime import datetime, date
 
-def get_hours_minutes_seconds(duration):
-    duration_str = str(duration)
-    duration_datetime = datetime.strptime(duration_str, '%H:%M:%S')
-    duration_formatted = duration_datetime.strftime('%H:%M:%S')
-
-    hours = int(duration_formatted[:2])
-    minutes = int(duration_formatted[3:5])
-    seconds = int(duration_formatted[6:])
+def get_hours_minutes_seconds(duration):    
+    hours, minutes, seconds = list(map(int, str(duration).split(':')))
 
     return hours, minutes, seconds
 
 
 def format_album_duration(duration):
-    hours, minutes, seconds = get_hours_minutes_seconds(duration)
+    hours, minutes, seconds = list(map(int, str(duration).split(':')))
 
     if hours >= 1:
         return f'{hours} hr {minutes} min'
@@ -22,7 +16,7 @@ def format_album_duration(duration):
 
 
 def format_track_duration(duration):
-    hours, minutes, seconds = get_hours_minutes_seconds(duration)
+    hours, minutes, seconds = list(map(int, str(duration).split(':')))
     
     if hours >= 1:
         return f'{hours}:{minutes:02d}:{seconds:02d}'
@@ -46,8 +40,11 @@ def format_release_date(release_date):
         12: 'December'
     }
 
-    year = release_date.year
-    month = release_date.month
-    day = release_date.day
+    if isinstance(release_date, str):
+        year, month, day = list(map(int, release_date.split('-')))
+    else:
+        year = release_date.year
+        month = release_date.month
+        day = release_date.day
 
     return f'{months[month]} {day}, {year}'

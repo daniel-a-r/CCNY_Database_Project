@@ -53,6 +53,43 @@ def insert_new_user(name, email, hashed_password):
     cursor.close()
 
 
+def get_artist_by_spotify_id(spotify_artist_id):
+    query = '''
+    SELECT * FROM artist
+    WHERE spotify_artist_id = %s
+    '''
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, [spotify_artist_id])
+    result = cursor.fetchall()
+    cursor.close()
+    return result
+
+
+def get_album_by_spotify_id(spotify_album_id):
+    query = '''
+    SELECT * FROM album
+    WHERE spotify_album_id = %s
+    '''
+    cursor = mysql.connection.cursor()   
+    cursor.execute(query, [spotify_album_id])
+    result = cursor.fetchall()
+    cursor.close()
+    return result
+
+
+def get_user_album(album_id):
+    query = '''
+    SELECT * FROM user_album
+    WHERE user_id = %s AND album_id = %s
+    '''
+    data = [session['user_id'], album_id]
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, data)
+    result = cursor.fetchall()
+    cursor.close()
+    return result
+
+
 def insert_into_user_album(album_id):
     query = '''
     INSERT INTO user_album (user_id, album_id)

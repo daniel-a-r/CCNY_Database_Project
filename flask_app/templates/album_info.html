@@ -6,7 +6,7 @@
             {% if in_collection %}
                 <a href="/remove-from-collection/{{ album_info['db_album_id'] }}"><button class="btn btn-danger">Remove From Collection</button></a>
             {% else %}
-                <a href="#"><button class="btn btn-primary">Add To Collection</button></a>
+                <a href="/add-to-collection/{{ album_info['spotify_album_id'] }}"><button class="btn btn-primary">Add To Collection</button></a>
             {% endif %}
             <a href="https://open.spotify.com/album/{{ album_info['spotify_album_id'] }}" target="_blank"><p>{{album_info['album_name']}}</p></a>
             <a href="https://open.spotify.com/artist/{{ album_info['spotify_artist_id'] }}" target="_blank"><p>{{album_info['artist_name']}}</p></a>
