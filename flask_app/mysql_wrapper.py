@@ -14,6 +14,45 @@ def last_insert_id():
     return result[0][0]
 
 
+def check_email_exists(email):
+    query = '''
+    SELECT * FROM user
+    WHERE email = %s
+    '''
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, [email])
+    result = cursor.fetchall()
+    cursor.close()
+
+    return result
+
+
+def check_email_exists_update_email(email):
+    query = '''
+    SELECT * FROM user
+    WHERE email = %s AND id <> %s;
+    '''
+    data = [email, session['user_id']]
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, data)
+    result = cursor.fetchall()
+    cursor.close()
+
+    return result
+
+
+def insert_new_user(name, email, hashed_password):
+    query = '''
+    INSERT INTO user (name, email, password)
+    VALUES(%s, %s, %s)
+    '''
+    data = [name, email, hashed_password]
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, data)
+    mysql.connection.commit()
+    cursor.close()
+
+
 def insert_into_user_album(album_id):
     query = '''
     INSERT INTO user_album (user_id, album_id)
@@ -148,6 +187,7 @@ def get_album_info_from_db(album_id):
 
     keys = ['artist_name', 'album_name', 'total_tracks', 'album_duration', 'release_date', 'label', 'img_src', 'spotify_album_id', 'spotify_artist_id']
     album_dict = dict(zip(keys, result[0]))
+    album_dict['db_album_id'] = album_id
 
     return album_dict
 
@@ -184,3 +224,153 @@ def get_user_info():
     pprint(user_info_dict)
 
     return user_info_dict
+
+
+def get_hashed_password():
+    query = '''
+    SELECT password
+    FROM user
+    WHERE id = %s;
+    '''
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, [session['user_id']])
+    result = cursor.fetchall()
+    cursor.close()
+
+    return result[0][0]
+
+
+def delete_artist(artist_id):
+    query = '''
+    DELETE FROM artist
+    WHERE id = %s;
+    '''
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, [artist_id])
+    mysql.connection.commit()
+    cursor.close()
+
+# check if any albums by an artist exists
+def check_other_artist_albums(artist_id):
+    query = '''
+    SELECT * FROM album_artist
+    WHERE artist_id = %s;
+    '''
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, [artist_id])
+    result = cursor.fetchall()
+    cursor.close()
+
+    if result:
+        return True
+    else:
+        return False
+
+# get artist id of album
+def get_artist_id_album_artist(album_id):
+    query = '''
+    SELECT artist_id FROM album_artist
+    WHERE album_id = %s;
+    '''
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, [album_id])
+    result = cursor.fetchall()
+    cursor.close()
+
+    return result[0][0]
+
+
+def delete_album(album_id):
+    # get artist id
+    artist_id = get_artist_id_album_artist(album_id)
+    query = '''
+    DELETE FROM album
+    WHERE id = %s;
+    '''
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, [album_id])
+    mysql.connection.commit()
+    cursor.close()
+
+    # check if there exists any albums by that artist after album deletion
+    other_albums_exist = check_other_artist_albums(artist_id)
+
+    # if no albums exists by that artist,
+    # then delete artist
+    if not other_albums_exist:
+        delete_artist(artist_id)
+
+# check if any users have album saved to collection
+def check_other_user_album(album_id):
+    query = '''
+    SELECT * FROM user_album
+    WHERE album_id = %s;
+    '''
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, [album_id])
+    result = cursor.fetchall()
+    cursor.close()
+
+    if result:
+        return True
+    else:
+        return False
+
+# removes an album from a user's collection
+def delete_from_collection(album_id):
+    query='''
+    DELETE FROM user_album
+    WHERE user_id = %s and album_id = %s;
+    '''
+    data = [session['user_id'], album_id]
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, data)
+    mysql.connection.commit()
+    cursor.close()
+
+    # checks if other users also have that album saved
+    album_exists = check_other_user_album(album_id)
+
+    # if other users do not have album,
+    # then album will be deleted from database
+    if not album_exists:
+        delete_album(album_id)
+
+
+def update_name(new_name):
+    query='''
+    UPDATE user
+    SET name = %s
+    WHERE id = %s;
+    '''
+    data = [new_name, session['user_id']]
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, data)
+    mysql.connection.commit()
+    cursor.close()
+
+
+def update_email(new_email):
+    query='''
+    UPDATE user
+    SET email = %s
+    WHERE id = %s;
+    '''
+    data = [new_email, session['user_id']]
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, data)
+    mysql.connection.commit()
+    cursor.close()
+
+
+def update_password(new_hashed_password):
+    query='''
+    UPDATE user
+    SET password = %s
+    WHERE id = %s;
+    '''
+    data = [new_hashed_password, session['user_id']]
+    cursor = mysql.connection.cursor()
+    cursor.execute(query, data)
+    mysql.connection.commit()
+    cursor.close()

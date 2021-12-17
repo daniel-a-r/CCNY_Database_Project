@@ -1,4 +1,3 @@
--- DROP SCHEMA IF EXISTS flask;
 CREATE SCHEMA IF NOT EXISTS csc336_project;
 USE csc336_project;
 
@@ -42,6 +41,7 @@ CREATE TABLE IF NOT EXISTS album_tracks (
     album_id INT UNSIGNED NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (album_id) REFERENCES album (id)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS album_artist (
@@ -49,7 +49,8 @@ CREATE TABLE IF NOT EXISTS album_artist (
     artist_id INT UNSIGNED NOT NULL,
     album_id INT UNSIGNED NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (album_id) REFERENCES album (id),
+    FOREIGN KEY (album_id) REFERENCES album (id)
+        ON DELETE CASCADE,
     FOREIGN KEY (artist_id) REFERENCES artist (id)
 );
 

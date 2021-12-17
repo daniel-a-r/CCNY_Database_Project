@@ -21,12 +21,12 @@ class AlbumSearchForm(FlaskForm):
     
 
 class UpdateNameForm(FlaskForm):
-    update_name = StringField('New Name', validators=[DataRequired()])
+    new_name = StringField('New Name', validators=[DataRequired()])
     submit = SubmitField('Update Name')
 
 
 class UpdateEmailForm(FlaskForm):
-    update_email = StringField('New Email', validators=[DataRequired(), Email()])
+    new_email = StringField('New Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Update Email')
 
 

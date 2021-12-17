@@ -4,7 +4,7 @@
         <div>
             <img src="{{ album_info['img_src'] }}">
             {% if in_collection %}
-                <a href="#"><button class="btn btn-danger">Remove From Collection</button></a>
+                <a href="/remove-from-collection/{{ album_info['db_album_id'] }}"><button class="btn btn-danger">Remove From Collection</button></a>
             {% else %}
                 <a href="#"><button class="btn btn-primary">Add To Collection</button></a>
             {% endif %}
