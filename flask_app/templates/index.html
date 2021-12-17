@@ -28,24 +28,124 @@
         </form>
     </div>
     {% if results %}
-        {% for item in results %}
-            <div>
-                <img src="{{ item['img_src'] }}">
-                <p>{{item['name']}}</p>
-                <p>{{item['artist']}}</p>
-                <a href="/album_info/{{ item['id'] }}"><button class="btn btn-primary">View More info</button></a>
-                <a href="/add-to-collection/{{ item['id'] }}"><button class="btn btn-primary">Add To Collection</button></a>
+        
+    
+    <div class="row">
+        <div class="col-md-3"><div>
+            <img src="{{ results[0]['img_src'] }}">
+            <p>{{results[0]['name']}}</p>
+            <p>{{results[0]['artist']}}</p>
+            <a href="/album_info/{{ results[0]['id'] }}"><button class="btn btn-primary">View More info</button></a>
+            <a href="/add-to-collection/{{ results[0]['id'] }}"><button class="btn btn-primary">Add To Collection</button></a>
+            </div>
+        </div>
+    
+        <div class="col-md-3"><div>
+            <img src="{{ results[1]['img_src'] }}">
+            <p>{{results[1]['name']}}</p>
+            <p>{{results[1]['artist']}}</p>
+            <a href="/album_info/{{ results[1]['id'] }}"><button class="btn btn-primary">View More info</button></a>
+            <a href="/add-to-collection/{{ results[1]['id'] }}"><button class="btn btn-primary">Add To Collection</button></a>
+            </div>
+        </div>
+
+        <div class="col-md-3"><div>
+            <img src="{{ results[2]['img_src'] }}">
+            <p>{{results[2]['name']}}</p>
+            <p>{{results[2]['artist']}}</p>
+            <a href="/album_info/{{ results[2]['id'] }}"><button class="btn btn-primary">View More info</button></a>
+            <a href="/add-to-collection/{{ results[2]['id'] }}"><button class="btn btn-primary">Add To Collection</button></a>
+            </div>
+        </div>
+
+        <div class="col-md-3"><div>
+            <img src="{{ results[3]['img_src'] }}">
+            <p>{{results[3]['name']}}</p>
+            <p>{{results[1]['artist']}}</p>
+            <a href="/album_info/{{ results[3]['id'] }}"><button class="btn btn-primary">View More info</button></a>
+            <a href="/add-to-collection/{{ results[3]['id'] }}"><button class="btn btn-primary">Add To Collection</button></a>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="row">
+        <div class="col-md-3"><div>
+            <img src="{{ results[4]['img_src'] }}">
+            <p>{{results[4]['name']}}</p>
+            <p>{{results[4]['artist']}}</p>
+            <a href="/album_info/{{ results[4]['id'] }}"><button class="btn btn-primary">View More info</button></a>
+            <a href="/add-to-collection/{{ results[4]['id'] }}"><button class="btn btn-primary">Add To Collection</button></a>
+            </div>
+        </div>
+
+        <div class="col-md-3"><div>
+            <img src="{{ results[5]['img_src'] }}">
+            <p>{{results[5]['name']}}</p>
+            <p>{{results[5]['artist']}}</p>
+            <a href="/album_info/{{ results[5]['id'] }}"><button class="btn btn-primary">View More info</button></a>
+            <a href="/add-to-collection/{{ results[5]['id'] }}"><button class="btn btn-primary">Add To Collection</button></a>
+            </div>
+        </div>
+    
+
+
+        <div class="col-md-3"><div>
+            <img src="{{ results[6]['img_src'] }}">
+            <p>{{results[6]['name']}}</p>
+            <p>{{results[6]['artist']}}</p>
+            <a href="/album_info/{{ results[6]['id'] }}"><button class="btn btn-primary">View More info</button></a>
+            <a href="/add-to-collection/{{ results[6]['id'] }}"><button class="btn btn-primary">Add To Collection</button></a>
+            </div>
+        </div>
+        <div class="col-md-3"><div>
+            <img src="{{ results[7]['img_src'] }}">
+            <p>{{results[7]['name']}}</p>
+            <p>{{results[7]['artist']}}</p>
+            <a href="/album_info/{{ results[7]['id'] }}"><button class="btn btn-primary">View More info</button></a>
+            <a href="/add-to-collection/{{ results[7]['id'] }}"><button class="btn btn-primary">Add To Collection</button></a>
+            </div>
+        </div>
+    
+    
+    
+    
+    </div>
+
+
+         {% for row in rows %}
+            <div class="row">
+                {% for item in row %}
+                    <div class="col-md-3">{{ item }}</div>
+                {% endfor %}
             </div>
         {% endfor %}
+          
+        
+       
+         
     {% elif collection %}
         {% for album in collection %}
+          
+        
+        
+        <div class="row">
             <div>
                 <img src="{{ album['album_img_src'] }}">
                 <p>{{album['album_name']}}</p>
                 <p>{{album['artist_name']}}</p>
                 <a href="/album_info/{{ album['album_id'] }}"><button class="btn btn-primary">View More info</button></a>
             </div>
+
+        
+
+        </div>
+            
         {% endfor %}
     {% endif %}
+    
     <p>Search data provided by Spotify</p>
+    
 {% endblock %}
