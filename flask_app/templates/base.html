@@ -11,10 +11,23 @@
     <body>
         <!-- Navbar will go here -->
         {% if 'user_id' in session %}
-            <!-- Navbar will have links to tutorial (if we make one), view album collection, profile, logout -->
-            <!-- Maybe will also say 'Hello {session['name']} or something?'-->
-        {% else %}
-            <!-- Navbar will have links to Login or Register -->
+        <!-- Navbar will have links to tutorial (if we make one), view album collection, profile, logout -->
+        <!-- Maybe will also say 'Hello {session['name']} or something?'-->
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/profile">Profile</a></li>
+            <li><a href="/logout">Logout</a></li>
+
+        </ul>
+
+    {% else %}
+        <!-- Navbar will have links to Login or Register -->
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/login">Login</a></li>
+            <li><a href="/register">Register</a></li>
+
+        </ul>
         {% endif %}
         <div class="container">
             {% with messages = get_flashed_messages(with_categories=true) %}
