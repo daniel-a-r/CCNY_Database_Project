@@ -14,9 +14,9 @@
 
     Activate environment:
 
-        on Windonws: `env\Scripts\activate`
+    - on Windonws: `env\Scripts\activate`
 
-        on Mac: `env/bin/activate`
+    - on Mac: `env/bin/activate`
 
 2. Install required packages: `pip install -r requirements.txt`
 
