@@ -22,7 +22,7 @@
 
 3. Run `project_schema.sql` in MySQL workbench to create database and tables.
 
-4. In flask_app folder, create a `.env` file with the following variables:
+4. In `flask_app` folder, create a `.env` file with the following variables:
     - SECRET_KEY = 
 
     Key of your choice 
