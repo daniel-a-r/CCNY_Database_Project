@@ -27,14 +27,18 @@ def home():
     search_results_list = []
     album_collection = []
     if 'user_id' in session:
-        album_collection = create_matrix(get_collection())
+        album_collection = get_collection()
 
     album_search_form = AlbumSearchForm()
     if album_search_form.validate_on_submit():
         album_name = album_search_form.album_name.data.strip().lower()
-        spotify_results = spotify.search(q='album:' + f'{album_name}', type='album')
+        spotify_results = spotify.search(q='album:' + f'{album_name}', limit=12, type='album')
         print(type(spotify_results))
         pprint(spotify_results)
+        print('Result total:', spotify_results['albums']['total'])
+
+        if spotify_results['albums']['total'] == 0:
+            flash('No results. Try entering something different', 'warning')
         
         for item in spotify_results['albums']['items']:
             item_dict = {
@@ -45,14 +49,10 @@ def home():
             }
             search_results_list.append(item_dict)
 
-    search_results_matrix = create_matrix(search_results_list)
-
-    pprint(album_collection)
-
     return render_template('index.html', 
                            title='Album Search', 
                            form=album_search_form, 
-                           results=search_results_matrix,
+                           results=search_results_list,
                            collection=album_collection, 
                            session=session)
 
