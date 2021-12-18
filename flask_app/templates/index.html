@@ -1,72 +1,66 @@
-{% extends "base.html" %}
-{% block content %}
-    <div class="container">
-        <form method="POST" class="card bg-blur p-3 mt-3">
-            {{ form.hidden_tag() }}
-            <fieldset class="form-group">
-                {% for field in form %}
-                    {% if (field.type != 'SubmitField') and (field.type != 'CSRFTokenField') %}
-                        <div class="form-group">
-                            {{ field.label(class="form-control-label") }}
-                            {% if field.errors %}
-                                {{ field(class="form-control form-control-lg is-invalid") }}
-                                <div class="invalid-feedback">
-                                    {% for error in field.errors %}
-                                        <span>{{ error }}</span>
-                                    {% endfor %}
-                                </div>
-                            {% else %}
-                                {{ field(class="form-control form-control-lg") }}
-                            {% endif %}
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            </fieldset>
-            <div class="form-group">
-                {{ form.submit(class="btn btn-primary") }}
-            </div>
-        </form>
+{% extends "base.html" %} {% block content %}
+<div class="container">
+  <form method="POST" class="card bg-blur p-3 mt-3">
+    {{ form.hidden_tag() }}
+    <fieldset class="form-group">
+      {% for field in form %} {% if (field.type != 'SubmitField') and
+      (field.type != 'CSRFTokenField') %}
+      <div class="form-group">
+        {{ field.label(class="form-control-label") }} {% if field.errors %} {{
+        field(class="form-control form-control-lg is-invalid") }}
+        <div class="invalid-feedback">
+          {% for error in field.errors %}
+          <span>{{ error }}</span>
+          {% endfor %}
+        </div>
+        {% else %} {{ field(class="form-control form-control-lg") }} {% endif %}
+      </div>
+      {% endif %} {% endfor %}
+    </fieldset>
+    <div class="form-group">{{ form.submit(class="btn btn-primary") }}</div>
+  </form>
+</div>
+{% if results %} {% for row in results %}
+<div class="row">
+  {% for album in row %}
+  <div style="padding-top: 15px" class="col-md-4">
+    <div>
+      <img src="{{ album['img_src'] }}" />
+      <p>{{album['name']}}</p>
+      <p>{{album['artist']}}</p>
+      <a href="/album_info/{{ album['id'] }}"
+        ><button class="btn btn-primary">View More info</button></a
+      >
+      <a href="/add-to-collection/{{ album['id'] }}"
+        ><button class="btn btn-primary">Add To Collection</button></a
+      >
     </div>
-    {% if results %}
-        {% for row in results %}
-            <div class="row">
-                {% for album in row %}
-                    <div class="col-md-4"><div>
-                        <img src="{{ album['img_src'] }}">
-                        <p>{{album['name']}}</p>
-                        <p>{{album['artist']}}</p>
-                        <a href="/album_info/{{ album['id'] }}"><button class="btn btn-primary">View More info</button></a>
-                        <a href="/add-to-collection/{{ album['id'] }}"><button class="btn btn-primary">Add To Collection</button></a>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endfor %}
+  </div>
+  {% endfor %}
+</div>
+{% endfor %} {% for row in rows %}
+<div class="row">
+  {% for item in row %}
+  <div class="col-md-3">{{ item }}</div>
+  {% endfor %}
+</div>
+{% endfor %} {% elif collection %} {% for row in collection %}
+<div class="row">
+  {% for album in row %}
+  <div class="col-md-4">
+    <div>
+      <img src="{{ album['album_img_src'] }}" />
+      <p>{{album['album_name']}}</p>
+      <p>{{album['artist_name']}}</p>
+      <a href="/album_info/{{ album['album_id'] }}"
+        ><button class="btn btn-primary">View More info</button></a
+      >
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endfor %} {% endif %}
 
+<p>Search data provided by Spotify</p>
 
-        {% for row in rows %}
-            <div class="row">
-                {% for item in row %}
-                    <div class="col-md-3">{{ item }}</div>
-                {% endfor %}
-            </div>
-        {% endfor %} 
-    {% elif collection %}
-        {% for row in collection %}
-            <div class="row">
-                {% for album in row %}
-                    <div class="col-md-4"><div>
-                        <img src="{{ album['album_img_src'] }}">
-                        <p>{{album['album_name']}}</p>
-                        <p>{{album['artist_name']}}</p>
-                        <a href="/album_info/{{ album['album_id'] }}"><button class="btn btn-primary">View More info</button></a>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endfor %}
-    {% endif %}
-    
-    <p>Search data provided by Spotify</p>
-    
 {% endblock %}

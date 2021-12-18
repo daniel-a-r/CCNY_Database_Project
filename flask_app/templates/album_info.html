@@ -1,24 +1,45 @@
-{% extends "base.html" %}
-{% block content %}
-    <div class="container">
-        <div>
-            <img src="{{ album_info['img_src'] }}">
-            {% if in_collection %}
-                <a href="/remove-from-collection/{{ album_info['db_album_id'] }}"><button class="btn btn-danger">Remove From Collection</button></a>
-            {% else %}
-                <a href="/add-to-collection/{{ album_info['spotify_album_id'] }}"><button class="btn btn-primary">Add To Collection</button></a>
-            {% endif %}
-            <a href="https://open.spotify.com/album/{{ album_info['spotify_album_id'] }}" target="_blank"><p>{{album_info['album_name']}}</p></a>
-            <a href="https://open.spotify.com/artist/{{ album_info['spotify_artist_id'] }}" target="_blank"><p>{{album_info['artist_name']}}</p></a>
-            <p>{{album_info['album_duration']}}</p>
-            <p>{{album_info['release_date']}}</p>
-            <p>{{album_info['total_tracks']}} songs</p>
-            <p>{{album_info['label']}}</p>
-        </div>
-        <div>
-            {% for track in album_tracks %}
-                <p>{{track['track_number']}} {{track['track_name']}} {% if track['explicit'] %}explicit{% endif %} {{track['track_duration']}}</p>
-            {% endfor %}
-        </div>
+{% extends "base.html" %} {% block content %}
+<div
+  style="float: left; width: fit-content; padding-top: 15px"
+  class="container"
+>
+  <div>
+    <img src="{{ album_info['img_src'] }}" />
+    <a
+      href="https://open.spotify.com/album/{{ album_info['spotify_album_id'] }}"
+      target="_blank"
+      ><p>{{album_info['album_name']}}</p></a
+    >
+    <a
+      href="https://open.spotify.com/artist/{{ album_info['spotify_artist_id'] }}"
+      target="_blank"
+      ><p>{{album_info['artist_name']}}</p></a
+    >
+    <div styl>
+      <p>{{album_info['album_duration']}}</p>
+      <p>{{album_info['release_date']}}</p>
+      <p>{{album_info['total_tracks']}} songs</p>
+      <p>{{album_info['label']}}</p>
     </div>
+    {% if in_collection %}
+    <a href="/remove-from-collection/{{ album_info['db_album_id'] }}"
+      ><button class="btn btn-danger">Remove From Collection</button></a
+    >
+    {% else %}
+    <a href="/add-to-collection/{{ album_info['spotify_album_id'] }}"
+      ><button class="btn btn-primary">Add To Collection</button></a
+    >
+    {% endif %}
+  </div>
+</div>
+
+<div style="float: right; padding-top: 15px">
+  {% for track in album_tracks %}
+  <p>
+    {{track['track_number']}} {{track['track_name']}} {% if track['explicit']
+    %}explicit{% endif %} {{track['track_duration']}}
+  </p>
+  {% endfor %}
+</div>
+
 {% endblock %}
