@@ -10,11 +10,11 @@ ul {
     background-color: rgb(51, 51, 51);
   }
 
-  li {
+li {
     float: left;
   }
 
-  li a {
+li a {
     display: block;
     color: white;
     text-align: center;
@@ -23,9 +23,34 @@ ul {
   }
 
   /* Change the link color to #111 (black) on hover */
-  li a:hover {
+li a:hover {
     background-color: #111;
   }
+
+.album-info {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
+
+.track {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr 10fr 1fr;
+  grid-template-rows: 2em; /* top row is 2em in height */
+  grid-auto-rows: 3em; /* following rows are 3em in height */
+}
+
+.track-header {
+  height: 2em;
+}
+
+.track-number {
+  justify-self: center;
+}
+
+.track-name {
+  justify-self: start;
+}
 
 
  

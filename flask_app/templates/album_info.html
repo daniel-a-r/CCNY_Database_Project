@@ -1,30 +1,33 @@
 {% extends "base.html" %} 
 {% block content %}
-  <div style="float: left; width: fit-content;" class="mt-4">
+<div class="container album-info mt-4">
+  <div>
+    <img src="{{ album_info['img_src'] }}" />
+    <a href="https://open.spotify.com/album/{{ album_info['spotify_album_id'] }}" target="_blank"><p>{{album_info['album_name']}}</p></a>
+    <a href="https://open.spotify.com/artist/{{ album_info['spotify_artist_id'] }}" target="_blank"><p>{{album_info['artist_name']}}</p></a>
     <div>
-      <img src="{{ album_info['img_src'] }}" />
-      <a href="https://open.spotify.com/album/{{ album_info['spotify_album_id'] }}" target="_blank"><p>{{album_info['album_name']}}</p></a>
-      <a href="https://open.spotify.com/artist/{{ album_info['spotify_artist_id'] }}" target="_blank"><p>{{album_info['artist_name']}}</p></a>
-      <div>
-        <p>{{album_info['album_duration']}}</p>
-        <p>{{album_info['release_date']}}</p>
-        <p>{{album_info['total_tracks']}} songs</p>
-        <p>{{album_info['label']}}</p>
-      </div>
-      {% if in_collection %}
-        <a href="/remove-from-collection/{{ album_info['db_album_id'] }}"><button class="btn btn-danger">Remove From Collection</button></a>
-      {% else %}
-        <a href="/add-to-collection/{{ album_info['spotify_album_id'] }}"><button class="btn btn-primary">Add To Collection</button></a>
-      {% endif %}
+      <p>{{album_info['total_tracks']}} songs, {{album_info['album_duration']}}</p>
+      <p>Release Date: {{album_info['release_date']}}</p>
+      <p>Label: {{album_info['label']}}</p>
     </div>
+    {% if in_collection %}
+      <a href="/remove-from-collection/{{ album_info['db_album_id'] }}"><button class="btn btn-danger">Remove From Collection</button></a>
+    {% else %}
+      <a href="/add-to-collection/{{ album_info['spotify_album_id'] }}"><button class="btn btn-primary">Add To Collection</button></a>
+    {% endif %}
   </div>
 
-  <div class="mt-4"style="float: right;">
+  <div class="track">
+    <strong class="track-number track-header">#</strong>
+    <strong class="track-name track-header">Title</strong>
+    <strong class="track-duration track-header">Duration</strong>
     {% for track in album_tracks %}
-      <p>
-        {{track['track_number']}} {{track['track_name']}} 
-        {% if track['explicit']%}explicit{% endif %} {{track['track_duration']}}
-      </p>
+      <p class="track-number mb-0">{{track['track_number']}}</p>
+      <p class="track-name mb-0">{{track['track_name']}} <strong>{% if track['explicit']%}Explicit{% endif %}</strong></p>
+      <p class="track-duration mb-0">{{track['track_duration']}}</p>
     {% endfor %}
   </div>
+</div>
+  
+
 {% endblock %}
