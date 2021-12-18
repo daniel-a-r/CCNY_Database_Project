@@ -47,6 +47,8 @@ def home():
 
     search_results_matrix = create_matrix(search_results_list)
 
+    pprint(album_collection)
+
     return render_template('index.html', 
                            title='Album Search', 
                            form=album_search_form, 
