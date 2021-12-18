@@ -32,7 +32,7 @@
     - DATABASE_PASS = 
     - DATABASE_SCHEMA = csc336_project
 
-    Your MySQL login credentials.
+    Your MySQL login credentials. `DATABASE_HOST` is most likely localhost and `DATABASE_USER` is most likely root.
 
     - SPOTIFY_CLIENT_ID = 
     - SPOTIFY_CLIENT_SECRET = 
