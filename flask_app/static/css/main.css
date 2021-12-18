@@ -27,15 +27,15 @@ li a:hover {
   background-color: #111;
 }
 
-.album-info {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-}
-
 .albums {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   justify-items: center;
+}
+
+.album-info {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
 }
 
 .track {
