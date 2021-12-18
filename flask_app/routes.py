@@ -1,3 +1,4 @@
+from re import search
 from flask import redirect, url_for, render_template, flash, request, session
 from flask_app import app, mysql, bcrypt, spotify
 from flask_app.forms import RegisterForm, LoginForm, AlbumSearchForm, UpdateNameForm, UpdateEmailForm, UpdatePasswordForm
@@ -7,20 +8,35 @@ from flask_app.mysql_wrapper import *
 from pprint import pprint
 
 
+def create_matrix(albums):
+    matrix = []
+    row = []
+    for i in range(len(albums)):
+        row.append(albums[i])
+        if i % 3 == 2:
+            matrix.append(row)
+            row = []
+    if row:
+        matrix.append(row)
+    return matrix
+
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/home/', methods=['GET', 'POST'])
 def home():
     search_results_list = []
     album_collection = []
     if 'user_id' in session:
-        album_collection = get_collection()
+        album_collection = create_matrix(get_collection())
 
     album_search_form = AlbumSearchForm()
     if album_search_form.validate_on_submit():
         album_name = album_search_form.album_name.data.strip().lower()
-        search_results = spotify.search(q='album:' + f'{album_name}', type='album')
+        spotify_results = spotify.search(q='album:' + f'{album_name}', type='album')
+        print(type(spotify_results))
+        pprint(spotify_results)
         
-        for item in search_results['albums']['items']:
+        for item in spotify_results['albums']['items']:
             item_dict = {
                 'artist': item['artists'][0]['name'],
                 'id': item['id'],
@@ -29,10 +45,12 @@ def home():
             }
             search_results_list.append(item_dict)
 
+    search_results_matrix = create_matrix(search_results_list)
+
     return render_template('index.html', 
                            title='Album Search', 
                            form=album_search_form, 
-                           results=search_results_list,
+                           results=search_results_matrix,
                            collection=album_collection, 
                            session=session)
 
