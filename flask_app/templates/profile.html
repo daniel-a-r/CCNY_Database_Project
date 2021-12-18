@@ -1,91 +1,82 @@
 {% extends "base.html" %}
 {% block content %}
-    <div class="container">
-        <h4>Name: {{user_info['name']}}</h4>
-        <h4>Email: {{user_info['email']}}</h4>
-    </div>
+    <h4>Name: {{user_info['name']}}</h4>
+    <h4>Email: {{user_info['email']}}</h4>
+    <form method="POST" class="card bg-blur p-3 mt-3">
+        {{ update_name_form.hidden_tag() }}
+        <fieldset class="form-group">
+            {% for field in update_name_form %}
+                {% if (field.type != 'SubmitField') and (field.type != 'CSRFTokenField') %}
+                    <div class="form-group">
+                        {{ field.label(class="form-control-label") }}
+                        {% if field.errors %}
+                            {{ field(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in field.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ field(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </fieldset>
+        <div class="form-group">
+            {{ update_name_form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
 
-    <div class="container">
-        <form method="POST" class="card bg-blur p-3 mt-3">
-            {{ update_name_form.hidden_tag() }}
-            <fieldset class="form-group">
-                {% for field in update_name_form %}
-                    {% if (field.type != 'SubmitField') and (field.type != 'CSRFTokenField') %}
-                        <div class="form-group">
-                            {{ field.label(class="form-control-label") }}
-                            {% if field.errors %}
-                                {{ field(class="form-control form-control-lg is-invalid") }}
-                                <div class="invalid-feedback">
-                                    {% for error in field.errors %}
-                                        <span>{{ error }}</span>
-                                    {% endfor %}
-                                </div>
-                            {% else %}
-                                {{ field(class="form-control form-control-lg") }}
-                            {% endif %}
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            </fieldset>
-            <div class="form-group">
-                {{ update_name_form.submit(class="btn btn-primary") }}
-            </div>
-        </form>
-    </div>
+    <form method="POST" class="card bg-blur p-3 mt-3">
+        {{ update_email_form.hidden_tag() }}
+        <fieldset class="form-group">
+            {% for field in update_email_form %}
+                {% if (field.type != 'SubmitField') and (field.type != 'CSRFTokenField') %}
+                    <div class="form-group">
+                        {{ field.label(class="form-control-label") }}
+                        {% if field.errors %}
+                            {{ field(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in field.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ field(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </fieldset>
+        <div class="form-group">
+            {{ update_email_form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
 
-    <div class="container">
-        <form method="POST" class="card bg-blur p-3 mt-3">
-            {{ update_email_form.hidden_tag() }}
-            <fieldset class="form-group">
-                {% for field in update_email_form %}
-                    {% if (field.type != 'SubmitField') and (field.type != 'CSRFTokenField') %}
-                        <div class="form-group">
-                            {{ field.label(class="form-control-label") }}
-                            {% if field.errors %}
-                                {{ field(class="form-control form-control-lg is-invalid") }}
-                                <div class="invalid-feedback">
-                                    {% for error in field.errors %}
-                                        <span>{{ error }}</span>
-                                    {% endfor %}
-                                </div>
-                            {% else %}
-                                {{ field(class="form-control form-control-lg") }}
-                            {% endif %}
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            </fieldset>
-            <div class="form-group">
-                {{ update_email_form.submit(class="btn btn-primary") }}
-            </div>
-        </form>
-    </div>
-
-    <div class="container">
-        <form method="POST" class="card bg-blur p-3 mt-3">
-            {{ update_password_form.hidden_tag() }}
-            <fieldset class="form-group">
-                {% for field in update_password_form %}
-                    {% if (field.type != 'SubmitField') and (field.type != 'CSRFTokenField') %}
-                        <div class="form-group">
-                            {{ field.label(class="form-control-label") }}
-                            {% if field.errors %}
-                                {{ field(class="form-control form-control-lg is-invalid") }}
-                                <div class="invalid-feedback">
-                                    {% for error in field.errors %}
-                                        <span>{{ error }}</span>
-                                    {% endfor %}
-                                </div>
-                            {% else %}
-                                {{ field(class="form-control form-control-lg") }}
-                            {% endif %}
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            </fieldset>
-            <div class="form-group">
-                {{ update_password_form.submit(class="btn btn-primary") }}
-            </div>
-        </form>
-    </div>
+    <form method="POST" class="card bg-blur p-3 mt-3">
+        {{ update_password_form.hidden_tag() }}
+        <fieldset class="form-group">
+            {% for field in update_password_form %}
+                {% if (field.type != 'SubmitField') and (field.type != 'CSRFTokenField') %}
+                    <div class="form-group">
+                        {{ field.label(class="form-control-label") }}
+                        {% if field.errors %}
+                            {{ field(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in field.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ field(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </fieldset>
+        <div class="form-group">
+            {{ update_password_form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
 {% endblock %}
