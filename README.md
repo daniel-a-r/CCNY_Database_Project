@@ -1,5 +1,7 @@
 # CCNY_Database_Project
 
+This project can be used to track your albums that you have collected in the form of physical media. It uses Spotify data via the Spotipy library to search albums. MySQL and Flask are used for the backend.
+
 ## Requirements 
 
 - [Python](https://www.python.org/downloads/)
@@ -14,7 +16,7 @@
 
     Activate environment:
 
-    - on Windonws: `env\Scripts\activate`
+    - on Windonws: `env\scripts\activate`
 
     - on Mac: `env/bin/activate`
 
