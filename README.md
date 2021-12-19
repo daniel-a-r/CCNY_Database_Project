@@ -12,15 +12,27 @@ This project can be used to track your albums that you have collected in the for
 
 1. Set up python virtual environment: 
     
-    Create environment: `python3 -m venv env`
+    Create environment: 
+    ```bash
+    python3 -m venv env
+    ```
 
     Activate environment:
 
-    - on Windonws: `env\scripts\activate`
+    - on Windonws: 
+        ```bash
+        env\scripts\activate
+        ```
 
-    - on Mac: `env/bin/activate`
+    - on Mac: 
+        ```bash
+        env/bin/activate
+        ```
 
-2. Install required packages: `pip install -r requirements.txt`
+2. Install required packages: 
+    ```bash
+    pip install -r requirements.txt
+    ```
 
 3. Run `project_schema.sql` in MySQL workbench to create database and tables.
 
@@ -41,4 +53,7 @@ This project can be used to track your albums that you have collected in the for
 
     Create an app in your Spotify developer dashboard and use the client id and client secret from that app.
 
-5. In `ccny_database_project` folder run: `py run.py`
+5. In `ccny_database_project` folder run: 
+    ```bash
+    py run.py
+    ```
