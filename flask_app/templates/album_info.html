@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container album-info mt-4">
   <div>
-    <img src="{{ album_info['img_src'] }}" />
+    <img src="{{ album_info['img_src'] }}" class="mb-2"/>
     <a href="https://open.spotify.com/album/{{ album_info['spotify_album_id'] }}" target="_blank"><p>{{album_info['album_name']}}</p></a>
     <a href="https://open.spotify.com/artist/{{ album_info['spotify_artist_id'] }}" target="_blank"><p>{{album_info['artist_name']}}</p></a>
     <div>
@@ -28,6 +28,4 @@
     {% endfor %}
   </div>
 </div>
-  
-
 {% endblock %}

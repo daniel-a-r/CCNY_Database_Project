@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <h2 class="mt-2">Account Login</h2>
     <form method="POST" class="card bg-blur p-3 mt-3 mb-4">
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
@@ -28,7 +29,7 @@
     </form>
     <div class="border-top pt-3">
         <small class="text-muted">
-            Need An Account <a class="ml-2" href="{{ url_for('register') }}">Sign Up Now</a>
+            Need An Account? <a class="ml-2" href="{{ url_for('register') }}">Sign Up Now</a>
         </small>
     </div>
     

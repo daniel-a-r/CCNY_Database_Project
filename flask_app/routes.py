@@ -8,19 +8,6 @@ from flask_app.mysql_wrapper import *
 from pprint import pprint
 
 
-def create_matrix(albums):
-    matrix = []
-    row = []
-    for i in range(len(albums)):
-        row.append(albums[i])
-        if i % 3 == 2:
-            matrix.append(row)
-            row = []
-    if row:
-        matrix.append(row)
-    return matrix
-
-
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/home/', methods=['GET', 'POST'])
 def home():

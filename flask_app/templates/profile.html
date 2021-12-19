@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-    <h4>Name: {{user_info['name']}}</h4>
+    <h4 class="mt-2">Name: {{user_info['name']}}</h4>
     <h4>Email: {{user_info['email']}}</h4>
     <form method="POST" class="card bg-blur p-3 mt-3">
         {{ update_name_form.hidden_tag() }}
