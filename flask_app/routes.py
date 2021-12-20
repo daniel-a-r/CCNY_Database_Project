@@ -20,9 +20,6 @@ def home():
     if album_search_form.validate_on_submit():
         album_name = album_search_form.album_name.data.strip().lower()
         spotify_results = spotify.search(q='album:' + f'{album_name}', limit=12, type='album')
-        print(type(spotify_results))
-        pprint(spotify_results)
-        print('Result total:', spotify_results['albums']['total'])
 
         if spotify_results['albums']['total'] == 0:
             flash('No results. Try entering something different', 'warning')

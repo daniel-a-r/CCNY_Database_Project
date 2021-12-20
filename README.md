@@ -19,7 +19,7 @@ This project can be used to track your albums that you have collected in the for
 
     Activate environment:
 
-    - on Windonws: 
+    - on Windows: 
         ```bash
         env\scripts\activate
         ```
